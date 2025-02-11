@@ -10,6 +10,14 @@ void loop();
 void kill();
 void loadTexture(const char* filename, SDL_Texture** texture);
 
+static float timeMultiplier = 100.0f;
+static int cameraX = 60;
+static int cameraY = 110;
+static float renderScale = 1;
+
+SDL_Rect earthRect;
+SDL_Rect moonRect;
+
 SDL_Window* win;
 SDL_Renderer* renderer;
 SDL_Texture* earthTexture;
@@ -57,23 +65,27 @@ void init()
     initBodies();
 }
 
-float timeMultiplier = 100.0f;
+void render(int camX, int camY)
+{
+    SDL_RenderSetScale(renderer, renderScale, renderScale);
+    moonRect.x = moon.position.x - camX;
+    moonRect.y = moon.position.y - camY;
+    moonRect.h = (MOON_AVG_RADIUS * EARTH_HEIGHT) / EARTH_AVG_RADIUS;
+    moonRect.w = (MOON_AVG_RADIUS * EARTH_WIDTH) / EARTH_AVG_RADIUS;
+
+    earthRect.x = earth.position.x - camX;
+    earthRect.y = earth.position.y - camY;
+    earthRect.h = EARTH_HEIGHT;
+    earthRect.w = EARTH_WIDTH;
+
+    SDL_RenderCopy(renderer, earthTexture, NULL, &earthRect);
+    SDL_RenderCopy(renderer, moonTexture, NULL, &moonRect);
+    SDL_RenderPresent(renderer);
+}
 
 void loop()
 {
     Uint32 lastUpdate = SDL_GetTicks();
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    SDL_Rect earthRect;
-    earthRect.h = EARTH_HEIGHT;
-    earthRect.w = EARTH_WIDTH;
-
-    SDL_Rect moonRect;
-    moonRect.h = (MOON_AVG_RADIUS * EARTH_HEIGHT) / EARTH_AVG_RADIUS;
-    moonRect.w = (MOON_AVG_RADIUS * EARTH_WIDTH) / EARTH_AVG_RADIUS;
-    
     while ( running ) {	
         Uint32 current = SDL_GetTicks();
 	    while ( SDL_PollEvent( &ev ) != 0 ) {
@@ -81,6 +93,38 @@ void loop()
 			    case SDL_QUIT:
 				    running = false;
 				    break;
+                case SDL_KEYDOWN:
+                    switch (ev.key.keysym.sym)
+                    {
+                        case SDLK_w:
+                            cameraY-=10;
+                            break;
+                        case SDLK_a:
+                            cameraX-=10;
+                            break;
+                        case SDLK_s:
+                            cameraY+=10;
+                            break;
+                        case SDLK_d:
+                            cameraX+=10;
+                            break;
+                    }        
+                    break;
+                case SDL_MOUSEWHEEL:
+                    int mouseX, mouseY;
+                    SDL_GetMouseState(&mouseX, &mouseY);
+                    
+                    float worldX = cameraX + mouseX / renderScale;
+                    float worldY = cameraY + mouseY / renderScale;
+                    
+                    float newScale = renderScale + (renderScale * ev.wheel.y * 0.1f);
+                    if (newScale < 0.1f)
+                        newScale = 0.1f;
+                    renderScale = newScale;
+                    
+                    cameraX = worldX - mouseX / renderScale;
+                    cameraY = worldY - mouseY / renderScale;
+                break;
 		    }
 	    }	
 
@@ -92,6 +136,8 @@ void loop()
         printf("Moon speed: %f\n", moon.speed);
         printf("Moon x velocity: %f\n", moon.velocity.x);
         printf("Moon y velocity: %f\n", moon.velocity.y);
+        printf("Camera x potition: %i\n", cameraX);
+        printf("Camera y potition: %i\n", cameraY);
 
         float deltaTime = (current - lastUpdate) / 1000.0f;
         update(deltaTime * timeMultiplier);
@@ -99,15 +145,7 @@ void loop()
 
         SDL_RenderClear(renderer);
 
-        earthRect.x = earth.position.x - (EARTH_WIDTH / 2);
-        earthRect.y = earth.position.y - (EARTH_HEIGHT / 2);
-
-        moonRect.x = moon.position.x;
-        moonRect.y = moon.position.y;
-
-        SDL_RenderCopy(renderer, earthTexture, NULL, &earthRect);
-        SDL_RenderCopy(renderer, moonTexture, NULL, &moonRect);
-        SDL_RenderPresent(renderer);
+        render(cameraX, cameraY);
 
         SDL_Delay(16);
     }

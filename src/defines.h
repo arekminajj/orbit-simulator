@@ -5,9 +5,12 @@
 */
 #define SCALE_FACTOR 1.0e-6
 
+/*
+    Some rendering constants
+*/
+
 #define WINDOW_HEIGHT 720
 #define WINDOW_WIDTH 1024
-
 #define EARTH_WIDTH 100
 #define EARTH_HEIGHT 100
 
