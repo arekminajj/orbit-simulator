@@ -17,11 +17,9 @@ void initBodies()
     moon.mass = MOON_MASS * SCALE_FACTOR;
     moon.position.x = earth.position.x + (MOON_DISTANCE_FROM_EARTH * SCALE_FACTOR);
     moon.position.y = earth.position.y;
-    float distance = MOON_DISTANCE_FROM_EARTH * SCALE_FACTOR;
-    float orbitalVelocity = sqrt(GRAVITATIONAL_CONSTANT * (earth.mass / SCALE_FACTOR) / (distance));
-    orbitalVelocity *= SCALE_FACTOR;
+    moon.speed = MOON_INITIAL_SPEED * SCALE_FACTOR;
     moon.velocity.x = 0;
-    moon.velocity.y = orbitalVelocity;
+    moon.velocity.y = moon.speed;
 }
 
 void update(float deltaTime)

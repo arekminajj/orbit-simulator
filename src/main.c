@@ -57,7 +57,7 @@ void init()
     initBodies();
 }
 
-float timeMultiplier = 1000.0f;
+float timeMultiplier = 100.0f;
 
 void loop()
 {
