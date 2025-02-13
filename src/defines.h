@@ -1,10 +1,7 @@
 #pragma once
 
-/*
-    Now one pixel is 1000km. Might be usefull if i wanted to add zomming and camera moving feat.
-*/
 #define SCALE_FACTOR 1.0e-6
-
+#define MAX_POINTS 2000
 /*
     Some rendering constants
 */

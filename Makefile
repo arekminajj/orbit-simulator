@@ -23,7 +23,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 # The -MMD and -MP flags together generate Makefiles for us!
 # These files will have .d instead of .o as the output.
-CPPFLAGS := $(shell sdl2-config --cflags) -MMD -MP -I$(INC_DIRS)
+CPPFLAGS := $(shell sdl2-config --cflags) -MMD -MP $(INC_FLAGS)
 LDFLAGS := -lSDL2 -lSDL2main -lSDL2_image -lSDL2_ttf
 
 # The final build step.
