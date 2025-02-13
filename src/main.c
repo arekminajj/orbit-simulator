@@ -18,7 +18,7 @@ void loop();
 void kill();
 void loadTexture(const char* filename, SDL_Texture** texture);
 
-static float timeMultiplier = 100.0f;
+
 static int cameraX = 60;
 static int cameraY = 110;
 static float renderScale = 1;
@@ -99,12 +99,13 @@ void init()
 
 static float earthMassMultiplier = 1.0f;
 static float moonMassMultiplier = 1.0f;
+static float timeMultiplier = 100.0f;
 
 void gui()
 {
     //gui
 
-    if (nk_begin(ctx, "Properties", nk_rect(50, 50, 230, 250),
+    if (nk_begin(ctx, "Properties", nk_rect(50, 50, 230, 280),
         NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
         NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
     {
@@ -128,6 +129,7 @@ void gui()
         nk_layout_row_dynamic(ctx, 25, 1);
         nk_property_float(ctx, "Earth mass:", 0, &earthMassMultiplier, 20.0f, 0.2f, 0.0f);
         nk_property_float(ctx, "Moon mass:", 0, &moonMassMultiplier, 20.0f, 0.2f, 0.0f);
+        nk_property_float(ctx, "Time multiplier:", 0, &timeMultiplier, 1000.0f, 10.0f, 0.0f);
         if (nk_button_label(ctx, "Deafault values"))
         {
             earthMassMultiplier = 1.0f;
