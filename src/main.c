@@ -77,8 +77,8 @@ void init()
         printf("Failed to init SDL_imae!\n");
     }
 
-    loadTexture("assets/earth.jpg", &earthTexture);
-    loadTexture("assets/moon.jpg", &moonTexture);
+    loadTexture("assets/earth.png", &earthTexture);
+    loadTexture("assets/moon.png", &moonTexture);
 
     initBodies();
 
