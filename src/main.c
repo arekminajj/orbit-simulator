@@ -107,7 +107,7 @@ void gui()
 {
     //gui
 
-    if (nk_begin(ctx, "Properties", nk_rect(50, 50, 230, 280),
+    if (nk_begin(ctx, "Properties", nk_rect(50, 50, 230, 310),
         NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
         NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
     {
