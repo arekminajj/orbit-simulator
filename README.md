@@ -1,6 +1,10 @@
 # Orbit Simulator
 
 Orbit simulation written in C with SDL2 and Nuklear.
+Video demo can be found [here](https://www.youtube.com/watch?v=aTTSKRRH_Q8)
+
+## Getting started 
+In order to run the project make sure you have SDL2 installed. Then, simply run `make` in the project directory to compile.
 
 ## Contributing
 
