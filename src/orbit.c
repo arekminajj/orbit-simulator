@@ -3,6 +3,8 @@
 celestialBody earth;
 celestialBody moon;
 
+float gravitationalConstantMultiplier = 1.0f;
+
 void initBodies()
 {
     earth.gravity = EARTH_GRAVITY * SCALE_FACTOR;
@@ -50,7 +52,7 @@ void update(float deltaTime)
         resolveCollision();
         return;
     }
-    float force = GRAVITATIONAL_CONSTANT * SCALE_FACTOR * ((earth.mass * moon.mass) / distanceSquared);
+    float force = GRAVITATIONAL_CONSTANT * gravitationalConstantMultiplier * SCALE_FACTOR * ((earth.mass * moon.mass) / distanceSquared);
     vec2 forceDirection = {earth.position.x - moon.position.x, earth.position.y - moon.position.y};
     vec2 normalizedForceDirection = {forceDirection.x / distance, forceDirection.y / distance};
 

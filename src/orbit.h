@@ -21,6 +21,7 @@ typedef struct {
 
 extern celestialBody earth;
 extern celestialBody moon;
+extern float gravitationalConstantMultiplier;
 
 void initBodies();
 void update(float deltaTime);

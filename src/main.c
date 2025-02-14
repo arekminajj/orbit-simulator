@@ -133,10 +133,13 @@ void gui()
         nk_property_float(ctx, "Earth mass:", 0, &earthMassMultiplier, 20.0f, 0.2f, 0.0f);
         nk_property_float(ctx, "Moon mass:", 0, &moonMassMultiplier, 200.0f, 2.0f, 0.0f);
         nk_property_float(ctx, "Time multiplier:", 0, &timeMultiplier, 1000.0f, 10.0f, 0.0f);
+        nk_property_float(ctx, "Gravity multiplier:", 0, &gravitationalConstantMultiplier, 5.0f, 0.2f, 0.0f);
         if (nk_button_label(ctx, "Deafault values"))
         {
             earthMassMultiplier = 1.0f;
             moonMassMultiplier = 1.0f;
+            timeMultiplier = 100.0f;
+            gravitationalConstantMultiplier = 1.0f;
         }
         if (nk_button_label(ctx, "Draw path"))
         {
