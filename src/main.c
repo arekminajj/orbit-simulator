@@ -171,10 +171,11 @@ void render(int camX, int camY)
     if(drawPath)
     {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        
         for (size_t i = 0; i < pathPointIndex; i++) 
         {
-            scaledPath[i].x = path[i].x - cameraX;
-            scaledPath[i].y = path[i].y - cameraY;
+            scaledPath[i].x = path[i].x - cameraX - (MOON_WIDTH / 2);
+            scaledPath[i].y = path[i].y - cameraY - (MOON_HEIGHT / 2);
         }
         SDL_RenderDrawLines(renderer, scaledPath, pathPointIndex);
     }
