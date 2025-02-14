@@ -10,6 +10,8 @@
 #define WINDOW_WIDTH 1024
 #define EARTH_WIDTH 100
 #define EARTH_HEIGHT 100
+#define MOON_WIDTH ((MOON_AVG_RADIUS * EARTH_WIDTH) / EARTH_AVG_RADIUS)
+#define MOON_HEIGHT ((MOON_AVG_RADIUS * EARTH_HEIGHT) / EARTH_AVG_RADIUS)
 
 /*
     Default physics values for objects.

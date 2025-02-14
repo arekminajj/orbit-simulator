@@ -12,6 +12,8 @@ void initBodies()
     earth.speed = 0;
     earth.velocity.x = 0;
     earth.velocity.y = 0;
+    earth.colliderRadius = 45.0f;
+    earth.isRendered = true;
 
     moon.gravity = MOON_GRAVITY * SCALE_FACTOR;
     moon.mass = MOON_MASS * SCALE_FACTOR;
@@ -20,6 +22,22 @@ void initBodies()
     moon.speed = MOON_INITIAL_SPEED * SCALE_FACTOR;
     moon.velocity.x = 0;
     moon.velocity.y = moon.speed;
+    moon.colliderRadius = 10.0f;
+    moon.isRendered = true;
+}
+
+bool isColliding(float distance, float colliderRadius1, float colliderRadius2)
+{
+    if(distance < colliderRadius1 + colliderRadius2)
+        return true;
+    return false;
+}
+
+void resolveCollision()
+{
+   moon.velocity.x = 0;
+   moon.velocity.y = 0;
+   moon.isRendered = false;
 }
 
 void update(float deltaTime)
@@ -27,6 +45,11 @@ void update(float deltaTime)
     float distanceSquared = pow((earth.position.x - moon.position.x), 2) + pow((earth.position.y - moon.position.y), 2);
     if(distanceSquared == 0) return;
     float distance = sqrt(distanceSquared);
+    if(isColliding(distance, moon.colliderRadius, earth.colliderRadius))
+    {
+        resolveCollision();
+        return;
+    }
     float force = GRAVITATIONAL_CONSTANT * SCALE_FACTOR * ((earth.mass * moon.mass) / distanceSquared);
     vec2 forceDirection = {earth.position.x - moon.position.x, earth.position.y - moon.position.y};
     vec2 normalizedForceDirection = {forceDirection.x / distance, forceDirection.y / distance};

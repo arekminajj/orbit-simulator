@@ -24,8 +24,9 @@ static int cameraY = 110;
 static float renderScale = 1;
 static bool drawPath = false;
 SDL_Point* path;
+SDL_Point* scaledPath;
 static size_t pathPointIndex = 0;
-const int PATH_POINT_DISTANCE = 5;
+const int PATH_POINT_DISTANCE = 3;
 static int currentDistance = 0;
 
 SDL_Rect earthRect;
@@ -95,6 +96,7 @@ void init()
     }
 
     path = (SDL_Point*)malloc(MAX_POINTS * sizeof(SDL_Point));
+    scaledPath = (SDL_Point*)malloc(MAX_POINTS * sizeof(SDL_Point));
 }
 
 static float earthMassMultiplier = 1.0f;
@@ -120,6 +122,7 @@ void gui()
             moon.position.y = earth.position.y;
             moon.velocity.x = 0;
             moon.velocity.y = moon.speed;
+            moon.isRendered = true;
 
             //reset path as well.
             pathPointIndex = 0;
@@ -128,7 +131,7 @@ void gui()
         nk_layout_row_dynamic(ctx, 30, 2);
         nk_layout_row_dynamic(ctx, 25, 1);
         nk_property_float(ctx, "Earth mass:", 0, &earthMassMultiplier, 20.0f, 0.2f, 0.0f);
-        nk_property_float(ctx, "Moon mass:", 0, &moonMassMultiplier, 20.0f, 0.2f, 0.0f);
+        nk_property_float(ctx, "Moon mass:", 0, &moonMassMultiplier, 200.0f, 2.0f, 0.0f);
         nk_property_float(ctx, "Time multiplier:", 0, &timeMultiplier, 1000.0f, 10.0f, 0.0f);
         if (nk_button_label(ctx, "Deafault values"))
         {
@@ -150,13 +153,13 @@ void gui()
 
 void render(int camX, int camY)
 {
-    moonRect.x = moon.position.x - camX;
-    moonRect.y = moon.position.y - camY;
-    moonRect.h = (MOON_AVG_RADIUS * EARTH_HEIGHT) / EARTH_AVG_RADIUS;
-    moonRect.w = (MOON_AVG_RADIUS * EARTH_WIDTH) / EARTH_AVG_RADIUS;
+    moonRect.x = (moon.position.x - camX) - (MOON_WIDTH / 2);
+    moonRect.y = moon.position.y - camY - (MOON_HEIGHT / 2);
+    moonRect.h = MOON_HEIGHT;
+    moonRect.w = MOON_WIDTH;
 
-    earthRect.x = earth.position.x - camX;
-    earthRect.y = earth.position.y - camY;
+    earthRect.x = earth.position.x - camX - (EARTH_WIDTH / 2);
+    earthRect.y = earth.position.y - camY - (EARTH_HEIGHT / 2);
     earthRect.h = EARTH_HEIGHT;
     earthRect.w = EARTH_WIDTH;
 
@@ -165,15 +168,14 @@ void render(int camX, int camY)
     if(drawPath)
     {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_Point* scaledPath = (SDL_Point*)malloc(pathPointIndex * sizeof(SDL_Point));
         for (size_t i = 0; i < pathPointIndex; i++) 
         {
             scaledPath[i].x = path[i].x - cameraX;
             scaledPath[i].y = path[i].y - cameraY;
         }
         SDL_RenderDrawLines(renderer, scaledPath, pathPointIndex);
-        free(scaledPath);
     }
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     gui();
@@ -183,7 +185,8 @@ void render(int camX, int camY)
     nk_sdl_render(NK_ANTI_ALIASING_ON);
     SDL_RenderSetScale(renderer, renderScale, renderScale);
     SDL_RenderCopy(renderer, earthTexture, NULL, &earthRect);
-    SDL_RenderCopy(renderer, moonTexture, NULL, &moonRect);
+    if(moon.isRendered)
+        SDL_RenderCopy(renderer, moonTexture, NULL, &moonRect);
     SDL_RenderPresent(renderer);
 }
 
@@ -274,6 +277,8 @@ void kill()
 {
     free(path);
     path = NULL;
+    free(scaledPath);
+    scaledPath = NULL;
 
     SDL_DestroyWindow(win);
     win = NULL;
